@@ -1,5 +1,10 @@
+// components
 import { FC } from "react";
 
+// helpers
+import { formatNumber } from "../helpers/format";
+
+// types
 import { RightTableProps } from "../types";
 
 const RightTable: FC<RightTableProps> = ({
@@ -28,14 +33,14 @@ const RightTable: FC<RightTableProps> = ({
     return data.map((d: any) =>
       d?.map((d: any, i: any) => (
         <tr key={i}>
-          {d?.cellSum?.map((cell: [], i: number) => (
+          {d?.cellValues?.map((cell: [], i: number) => (
             <td className="table__cell" key={i}>
-              {Math.ceil(cell[d.level2])}
+              {formatNumber(cell[d.level2])}
             </td>
           ))}
           {d?.total?.map((t: [], i: number) => (
             <td key={i} className="table__cell -total">
-              {Math.ceil(t[d.level1] || t)}
+              {formatNumber(t[d.level1] || t)}
             </td>
           ))}
         </tr>

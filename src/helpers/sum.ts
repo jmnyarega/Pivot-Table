@@ -1,11 +1,18 @@
 // types
-import { Data, ColumnDimension, Metric, RowDimensions } from "../types";
+import {
+  Data,
+  ColumnDimension,
+  Metric,
+  RowDimensions,
+  Row,
+  CellValue,
+} from "../types";
 
 // helpers
 import { columns } from "./columns";
 import { getRows } from "./rows";
 
-export const extraRows = ["Grand Total"];
+export const extraRows = "Grand Total";
 
 export const totalSumCell = (
   data: Data,
@@ -99,45 +106,49 @@ export const grandTotalCat = (
   }, 0);
 };
 
+const rowData = (
+  data: Data,
+  rowDimensions: RowDimensions,
+  subTotal: any,
+  cellValue: CellValue
+): Row[] => {
+  const rows = getRows(data, rowDimensions, extraRows)[1].values;
+  return rows.map((l, index) => ({
+    level1: data.find((d) => d[rowDimensions[1]] === l)[rowDimensions[0]],
+    level2: l,
+    cellValues: cellValue[index].concat(subTotal[index]),
+  }));
+};
+
 export const populateRows = (
   data: Data,
   rowDimensions: RowDimensions,
   columnDimension: ColumnDimension,
   metric: Metric
 ) => {
-  const rows = getRows(data, rowDimensions, extraRows)[1].values;
+  // parent Level - row dimension
+  const rows = getRows(data, rowDimensions, extraRows)[0].values;
 
   const subTotal = getSubTotal(data, rowDimensions, metric);
-  const cellSum = getCellSum(data, rowDimensions, columnDimension, metric);
+  const cellValue = getCellSum(data, rowDimensions, columnDimension, metric);
   const total = totalSumCell(data, columnDimension, metric);
   const subTotals = getRowSum(data, rowDimensions, columnDimension, metric);
   const gTotal = grandTotalCat(data, rowDimensions, metric);
   const totalCats = totalCat(data, rowDimensions, metric);
 
-  const rowData = rows.map((l, index) => ({
-    level1: data.find((d) => d[rowDimensions[1]] === l)[rowDimensions[0]],
-    level2: l,
-    cellSum: cellSum[index].concat(subTotal[index]),
-  }));
+  const rData = rowData(data, rowDimensions, subTotal, cellValue);
 
-  return rowData.map((d, i) =>
-    rows
-      .filter((level) => {
-        console.log(i);
-        return level === d.level1;
-      })
-      .concat([{ ...d, total: subTotal[i] }])
-  );
+  return rows?.map((level, i) => {
+    const totals = subTotals[i].concat(totalCats[i]);
+
+    return rData
+      .filter((d) => d.level1 === level)
+      .concat([{ level1: level, total: totals }])
+      .map((d) => {
+        if (d.level1 === extraRows) {
+          d.total = [...total, gTotal];
+        }
+        return d;
+      });
+  });
 };
-
-// return rows?.map((level, i) =>
-//   rowData
-//     .filter((d) => d.level1 === level)
-//     .concat({ level1: level, total: subTotals[i].concat(totalCats[i]) })
-//     .map((d) => {
-//       if (d.level1 === "Grand Total") {
-//         d?.total = [...total, gTotal];
-//       }
-//       return d;
-//     })
-// );

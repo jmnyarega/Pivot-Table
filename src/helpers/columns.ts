@@ -9,9 +9,5 @@ export const getColumns = (
   rowDimensions: RowDimensions,
   columnDimension: ColumnDimension,
   data: Data,
-  extraColumns: string[]
-) => [
-  ...rowDimensions,
-  ...columns(columnDimension, data).values,
-  ...extraColumns,
-];
+  extraColumns: string
+) => [...rowDimensions, ...columns(columnDimension, data).values, extraColumns];

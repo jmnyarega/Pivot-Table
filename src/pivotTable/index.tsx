@@ -4,6 +4,7 @@ import LeftTable from "./LeftTable";
 import RightTable from "./RightTable";
 
 import { getRowData } from "../helpers/pivotTable";
+import { getColumns } from "../helpers/columns";
 
 import { PivotTableProps } from "../types";
 
@@ -15,20 +16,19 @@ const PivotTable: FC<PivotTableProps> = ({
   dataset,
   metric,
   styles,
+  name,
 }) => {
-  // const columns = getColumns([], columnDimension, dataset, ["Grand Total"]);
-  // const data = dataLevels(dataset, rowDimensions, columnDimension, metric);
+  const columns = getColumns([], columnDimension, dataset, "Grand Total");
   const data = getRowData(dataset, rowDimensions, columnDimension, metric);
-  console.log(data);
   return (
     <div className="table__container" style={styles}>
       <div className="table__wrap">
-        <LeftTable rowDimensions={rowDimensions} data={data} />
-        {/* <RightTable */}
-        {/*   columnDimension={columnDimension} */}
-        {/*   data={data} */}
-        {/*   columns={columns} */}
-        {/* /> */}
+        <LeftTable rowDimensions={rowDimensions} data={data} name={name} />
+        <RightTable
+          columnDimension={columnDimension}
+          data={data}
+          columns={columns}
+        />
       </div>
     </div>
   );

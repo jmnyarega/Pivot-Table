@@ -1,4 +1,7 @@
+// components
 import PivotTable from "./pivotTable";
+
+// helpers
 import dataset from "./data/dataset.json";
 
 const styles = {
@@ -13,6 +16,7 @@ const App = () => (
     metric="sales"
     dataset={dataset}
     styles={styles}
+    name="products"
   />
 );
 
