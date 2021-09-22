@@ -1,5 +1,5 @@
-import PivotTable from "./components/PivotTable";
-import dataset from "./dataset.json";
+import PivotTable from "./pivotTable";
+import dataset from "./data/dataset.json";
 
 const styles = {
   minHeight: "100vh",

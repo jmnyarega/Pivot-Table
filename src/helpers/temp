@@ -99,17 +99,13 @@ export const dataLevels = (dataset, rowDimensions, columnDimension, metric) => {
       .concat({ level1: level, total: subTotals[i].concat(totalCats[i]) })
       .map((d) => {
         if (d.level1 === "Grand Total") {
-          d.total = [ ...total, gTotal ];
+          d.total = [...total, gTotal];
         }
         return d;
       })
   );
 };
 
-/*
- * This function contructs a data structure for the component.
- *
- */
 export const getData = (data, rowDimensions, columnDimension, metric) => {
   const levels = getLevels(data, rowDimensions)[1].values;
   const subTotal = getSubTotal(data, rowDimensions, metric);

@@ -1,4 +1,12 @@
-const RightTable = ({ columnDimension, data, columns }) => {
+import { FC } from "react";
+
+import { RightTableProps } from "../types";
+
+const RightTable: FC<RightTableProps> = ({
+  columnDimension,
+  data,
+  columns,
+}) => {
   const tableHeader = () => (
     <>
       <tr>
@@ -17,15 +25,15 @@ const RightTable = ({ columnDimension, data, columns }) => {
   );
 
   const tableRows = () => {
-    return data.map((d) =>
-      d.map((d, i) => (
+    return data.map((d: any) =>
+      d?.map((d: any, i: any) => (
         <tr key={i}>
-          {d?.cellSum?.map((cell, i) => (
+          {d?.cellSum?.map((cell: [], i: number) => (
             <td className="table__cell" key={i}>
               {Math.ceil(cell[d.level2])}
             </td>
           ))}
-          {d?.total?.map((t, i) => (
+          {d?.total?.map((t: [], i: number) => (
             <td key={i} className="table__cell -total">
               {Math.ceil(t[d.level1] || t)}
             </td>
@@ -37,11 +45,9 @@ const RightTable = ({ columnDimension, data, columns }) => {
 
   return (
     <div className="table__scroll">
-      <table className="table" border={0}>
-        <thead className="table__header">
-          {tableHeader(columnDimension, columns)}
-        </thead>
-        <tbody>{tableRows(data)}</tbody>
+      <table className="table">
+        <thead className="table__header">{tableHeader()}</thead>
+        <tbody>{tableRows()}</tbody>
       </table>
     </div>
   );
