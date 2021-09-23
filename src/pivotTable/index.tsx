@@ -1,16 +1,19 @@
 import { FC } from "react";
 
+// components
 import LeftTable from "./LeftTable";
 import RightTable from "./RightTable";
 
+// helpers
 import { getRowData } from "../helpers/pivotTable";
-import { getColumns } from "../helpers/columns";
 
-import { PivotTableProps } from "../types";
+// types
+import { IPivotTableProps } from "../types";
 
+// css
 import "./css/pivotTable.css";
 
-const PivotTable: FC<PivotTableProps> = ({
+const PivotTable: FC<IPivotTableProps> = ({
   rowDimensions,
   columnDimension,
   dataset,
@@ -18,15 +21,19 @@ const PivotTable: FC<PivotTableProps> = ({
   styles,
   title,
 }) => {
-  const columns = getColumns([], columnDimension, dataset, "Grand Total");
-  const data = getRowData(dataset, rowDimensions, columnDimension, metric);
+  const { columns, rows } = getRowData(
+    dataset,
+    rowDimensions,
+    columnDimension,
+    metric
+  );
   return (
     <div className="table__container" style={styles}>
       <div className="table__wrap">
-        <LeftTable rowDimensions={rowDimensions} data={data} title={title} />
+        <LeftTable rowDimensions={rowDimensions} rows={rows} title={title} />
         <RightTable
           columnDimension={columnDimension}
-          data={data}
+          rows={rows}
           columns={columns}
         />
       </div>

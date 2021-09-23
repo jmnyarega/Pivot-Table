@@ -1,12 +1,12 @@
 import { FC } from "react";
 
 // types
-import { LeftTableProps } from "../types";
+import { ILeftTableProps } from "../types";
 
 // helpers
 import { formatCamelCaseHeaders } from "../helpers/format";
 
-const LeftTable: FC<LeftTableProps> = ({ rowDimensions, data, title }) => {
+const LeftTable: FC<ILeftTableProps> = ({ rowDimensions, rows, title }) => {
   const tableHeader = () => (
     <thead className="table__header">
       <tr>
@@ -25,7 +25,7 @@ const LeftTable: FC<LeftTableProps> = ({ rowDimensions, data, title }) => {
   );
 
   const tableRows = () => {
-    return data.map((d: any) => {
+    return rows.map((d: any) => {
       let subLevelCount = d.length;
       return d.map((l: any, i: any) => {
         subLevelCount -= 1;

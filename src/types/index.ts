@@ -7,7 +7,7 @@ export type Metric = string;
 
 type Styles = Object;
 
-export interface PivotTableProps {
+export interface IPivotTableProps {
   rowDimensions: RowDimensions;
   columnDimension: ColumnDimension;
   dataset: Data;
@@ -16,22 +16,22 @@ export interface PivotTableProps {
   title: string;
 }
 
-export interface LeftTableProps {
+export interface ILeftTableProps {
   rowDimensions: RowDimensions;
-  data: Array<any>;
+  rows: Array<any>;
   title: string;
 }
 
-export interface RightTableProps {
+export interface IRightTableProps {
   columnDimension: ColumnDimension;
-  data: Array<any>;
+  rows: Array<any>;
   columns: Columns;
 }
 
 export type CellValue = Array<any>;
-export type RowData = Row[];
+export type RowData = IRow[];
 
-export interface Row {
+export interface IRow {
   level1?: any | string;
   level2?: any | string;
   cellValues?: CellValue[];

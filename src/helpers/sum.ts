@@ -4,12 +4,12 @@ import {
   ColumnDimension,
   Metric,
   RowDimensions,
-  Row,
+  IRow,
   CellValue,
 } from "../types";
 
 // helpers
-import { columns } from "./columns";
+import { columns, getColumns } from "./columns";
 import { getRows } from "./rows";
 
 export const extraRows = "Grand Total";
@@ -183,7 +183,7 @@ export const formatRowData = (
   rowDimensions: RowDimensions,
   subTotal: any,
   cellValues: CellValue[]
-): Row[] => {
+): IRow[] => {
   // child level rows
   const rows = getRows(data, rowDimensions, extraRows)[1].values;
   return rows.map((l, index) => ({
@@ -253,4 +253,7 @@ export const cellValues = (
   rowDimensions: RowDimensions,
   columnDimension: ColumnDimension,
   metric: Metric
-) => insertTotals(data, rowDimensions, columnDimension, metric);
+) => ({
+  rows: insertTotals(data, rowDimensions, columnDimension, metric),
+  columns: getColumns([], columnDimension, data, extraRows),
+});
