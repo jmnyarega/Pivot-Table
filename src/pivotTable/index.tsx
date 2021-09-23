@@ -16,14 +16,14 @@ const PivotTable: FC<PivotTableProps> = ({
   dataset,
   metric,
   styles,
-  name,
+  title,
 }) => {
   const columns = getColumns([], columnDimension, dataset, "Grand Total");
   const data = getRowData(dataset, rowDimensions, columnDimension, metric);
   return (
     <div className="table__container" style={styles}>
       <div className="table__wrap">
-        <LeftTable rowDimensions={rowDimensions} data={data} name={name} />
+        <LeftTable rowDimensions={rowDimensions} data={data} title={title} />
         <RightTable
           columnDimension={columnDimension}
           data={data}

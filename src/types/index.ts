@@ -13,13 +13,13 @@ export interface PivotTableProps {
   dataset: Data;
   metric: Metric;
   styles: Styles;
-  name: string;
+  title: string;
 }
 
 export interface LeftTableProps {
   rowDimensions: RowDimensions;
   data: any; // update this
-  name: string;
+  title: string;
 }
 
 export interface RightTableProps {

@@ -1,5 +1,5 @@
 export const formatNumber = (value: number): string => {
-  if (typeof value !== "number") {
+  if (typeof value !== "number" || Number.isNaN(value)) {
     return "0";
   } else {
     return new Intl.NumberFormat("en-IN", {

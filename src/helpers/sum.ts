@@ -14,7 +14,13 @@ import { getRows } from "./rows";
 
 export const extraRows = "Grand Total";
 
-export const totalSumCell = (
+/*
+ *  - filters data by columns [ states ]
+ *  - returns the total sum of metric(sales) of each column ( state )
+ *  @return format:
+ *      totalMetric: [ number, ... ]
+ */
+export const getTotalColumnSum = (
   data: Data,
   columnDimension: ColumnDimension,
   metric: Metric
@@ -27,7 +33,17 @@ export const totalSumCell = (
   );
 };
 
-export const totalCat = (
+/*
+ * - filters data via the parent level - category
+ * - return an array of sums for each category
+ * - row dimension in the return is the parent level dimension
+ * @return format:
+ *      totalParentLevelSum: [
+ *          [rowDimensions]: Number,
+ *         ...
+ *      ]
+ */
+export const getColumnPerParentRD = (
   data: Data,
   rowDimensions: RowDimensions,
   metric: Metric
@@ -40,7 +56,17 @@ export const totalCat = (
   }));
 };
 
-export const getSubTotal = (
+/*
+ * - filters data via last level - sub-category
+ * - return an array of sums for each sub-category
+ * - row dimension in the return is the child level dimension
+ * @return format:
+ *      totalChildLevelSum: [
+ *          [rowDimensions]: Number,
+ *         ...
+ *      ]
+ */
+export const getColumnPerChildRD = (
   data: Data,
   rowDimensions: RowDimensions,
   metric: Metric
@@ -53,6 +79,22 @@ export const getSubTotal = (
   }));
 };
 
+/* @FIX
+ *  - The return for is flawed, return the inner array instead....
+ *
+ *
+ * - filters data via child level dimension
+ * - maps each level with corresponding columnDimension
+ * - Then calculates sum of each cell.
+ * @return format:
+ *      cellValue: [
+ *         [
+ *          { [columnDimension]: columnDimensionCorrespondingValue, [childLevelDimension]: totalValue },
+ *          ....
+ *         ]
+ *      ]
+ *
+ */
 export const getCellSum = (
   data: Data,
   rowDimensions: RowDimensions,
@@ -61,17 +103,27 @@ export const getCellSum = (
 ) => {
   const { label, values } = getRows(data, rowDimensions, extraRows)[1];
   const { values: cols } = columns(columnDimension, data);
-  return values.map((l2) =>
+  return values.map((row) =>
     cols.map((col: string) => ({
       [columnDimension]: col,
-      [l2]: data
-        .filter((d) => d[label] === l2 && d[columnDimension] === col)
+      [row]: data
+        .filter((d) => d[label] === row && d[columnDimension] === col)
         .reduce((acc, current) => (acc += current[metric]), 0),
     }))
   );
 };
 
-export const getRowSum = (
+/* @revisit
+ * - Gets the total row sum of parent level column dimension per columnDimension
+ * - @return format:
+ *      [
+ *          [
+ *              { [columnDimension]: columnDimensionCorrespondingValue, [parentLevelDimension]: sum },
+ *              ...
+ *          ]
+ *      ]
+ */
+export const getTotalParentRowSumPerCD = (
   data: Data,
   rowDimensions: RowDimensions,
   columnDimension: ColumnDimension,
@@ -94,33 +146,72 @@ export const getRowSum = (
   );
 };
 
-export const grandTotalCat = (
+/*
+ * - Calculates the total sum of all cell values
+ * - @returns format:
+ *      number
+ *
+ */
+export const getTotalSumOfCellValues = (
   data: Data,
   rowDimensions: RowDimensions,
   metric: Metric
 ) => {
-  const values = totalCat(data, rowDimensions, metric);
+  const values = getColumnPerParentRD(data, rowDimensions, metric);
   return values.reduce((acc, cur) => {
     const v: any = Object.keys(cur)[0];
     return (acc += cur[v]);
   }, 0);
 };
 
-const rowData = (
+/*
+ * - Mungles data into a row format
+ * - @returns format:
+ *      [
+ *          {
+ *              level1: [value],
+ *              level2: [value],
+ *              cellValues: [
+ *                  { [columnDimension]: value, [rowDimension]: value }
+ *              ]
+ *          }
+ *      ]
+ *
+ */
+export const formatRowData = (
   data: Data,
   rowDimensions: RowDimensions,
   subTotal: any,
-  cellValue: CellValue
+  cellValues: CellValue[]
 ): Row[] => {
+  // child level rows
   const rows = getRows(data, rowDimensions, extraRows)[1].values;
   return rows.map((l, index) => ({
     level1: data.find((d) => d[rowDimensions[1]] === l)[rowDimensions[0]],
     level2: l,
-    cellValues: cellValue[index].concat(subTotal[index]),
+    cellValues: cellValues[index].concat(subTotal[index]),
   }));
 };
 
-export const populateRows = (
+/*
+ * Insert totals to cell values
+ * @returns:
+ *   [
+ *       {
+ *           level1: [value],
+ *           level2: [value],
+ *           cellValues: [
+ *               { [columnDimension]: value, [rowDimension]: value }
+ *           ],
+ *       }
+ *       ....
+ *       {
+ *          level1: [value],
+ *          total: [sum, sum, ...]
+ *       }
+ *   ]
+ */
+export const insertTotals = (
   data: Data,
   rowDimensions: RowDimensions,
   columnDimension: ColumnDimension,
@@ -128,27 +219,38 @@ export const populateRows = (
 ) => {
   // parent Level - row dimension
   const rows = getRows(data, rowDimensions, extraRows)[0].values;
+  const rowData = formatRowData(
+    data,
+    rowDimensions,
+    getColumnPerChildRD(data, rowDimensions, metric),
+    getCellSum(data, rowDimensions, columnDimension, metric)
+  );
 
-  const subTotal = getSubTotal(data, rowDimensions, metric);
-  const cellValue = getCellSum(data, rowDimensions, columnDimension, metric);
-  const total = totalSumCell(data, columnDimension, metric);
-  const subTotals = getRowSum(data, rowDimensions, columnDimension, metric);
-  const gTotal = grandTotalCat(data, rowDimensions, metric);
-  const totalCats = totalCat(data, rowDimensions, metric);
+  const totalColumn = getTotalColumnSum(data, columnDimension, metric);
+  const childLevelTotals = getTotalParentRowSumPerCD(
+    data,
+    rowDimensions,
+    columnDimension,
+    metric
+  );
+  const gTotal = getTotalSumOfCellValues(data, rowDimensions, metric);
+  const rowTotal = getColumnPerParentRD(data, rowDimensions, metric);
 
-  const rData = rowData(data, rowDimensions, subTotal, cellValue);
-
-  return rows?.map((level, i) => {
-    const totals = subTotals[i].concat(totalCats[i]);
-
-    return rData
+  return rows.map((level, i) => {
+    const totals = childLevelTotals[i].concat(rowTotal[i]);
+    return rowData
       .filter((d) => d.level1 === level)
       .concat([{ level1: level, total: totals }])
       .map((d) => {
-        if (d.level1 === extraRows) {
-          d.total = [...total, gTotal];
-        }
+        d.level1 === extraRows && (d.total = [...totalColumn, gTotal]);
         return d;
       });
   });
 };
+
+export const cellValues = (
+  data: Data,
+  rowDimensions: RowDimensions,
+  columnDimension: ColumnDimension,
+  metric: Metric
+) => insertTotals(data, rowDimensions, columnDimension, metric);

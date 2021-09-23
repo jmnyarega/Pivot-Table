@@ -6,12 +6,12 @@ import { LeftTableProps } from "../types";
 // helpers
 import { formatCamelCaseHeaders } from "../helpers/format";
 
-const LeftTable: FC<LeftTableProps> = ({ rowDimensions, data, name }) => {
+const LeftTable: FC<LeftTableProps> = ({ rowDimensions, data, title }) => {
   const tableHeader = () => (
     <thead className="table__header">
       <tr>
         <th className="table__caption" colSpan={rowDimensions.length}>
-          {name}
+          {title}
         </th>
       </tr>
       <tr>
