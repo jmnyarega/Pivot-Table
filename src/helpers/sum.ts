@@ -49,7 +49,7 @@ export const getColumnPerParentRD = (
   metric: Metric
 ) => {
   const { label, values } = getRows(data, rowDimensions, extraRows)[0];
-  return values.map((c) => ({
+  return values.map((c: string) => ({
     [c]: data
       .filter((d) => d[label] === c)
       .reduce((acc, current) => (acc += current[metric]), 0),

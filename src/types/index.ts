@@ -18,13 +18,13 @@ export interface PivotTableProps {
 
 export interface LeftTableProps {
   rowDimensions: RowDimensions;
-  data: any; // update this
+  data: Array<any>;
   title: string;
 }
 
 export interface RightTableProps {
   columnDimension: ColumnDimension;
-  data: any; // update this
+  data: Array<any>;
   columns: Columns;
 }
 
@@ -32,8 +32,8 @@ export type CellValue = Array<any>;
 export type RowData = Row[];
 
 export interface Row {
-  level1?: string;
-  level2?: string;
+  level1?: any | string;
+  level2?: any | string;
   cellValues?: CellValue[];
   total?: CellValue;
 }

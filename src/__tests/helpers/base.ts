@@ -47,7 +47,7 @@ export const initialize = (): any => ({
   ],
 });
 
-export const clear = () => ({
+export const clear = (): IData => ({
   columnDimension: "",
   rowDimensions: [""],
   extraColumns: "",
