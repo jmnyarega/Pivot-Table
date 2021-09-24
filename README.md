@@ -1,14 +1,15 @@
 # Pivot Table
-- Pivot table component using ReactJs
+  - Pivot table component built using ReactJs
 
 ### System prerequisites
-- nodejs v10 or later
+  - nodejs v10 or later
+  - yarn
 
 ### How to run the application locally on your machine
-    - Clone the repository - `git clone git@github.com:josiahmokob0/Pivot-Table.git`
-    - Checkout to the root directory of the app - `cd Pivot-Table`
-    - Download all the required packages for the application to run - `yarn install` or `npm install`
-    - To run the application - `yarn start` or `npm start`
+  - Clone the repository - `git clone git@github.com:josiahmokob0/Pivot-Table.git`
+  - Checkout to the root directory of the app - `cd Pivot-Table`
+  - Download all the required packages for the application to run - `yarn install` or `npm install`
+  - To run the application - `yarn start` or `npm start`
 	
 ### General Requirements
   - The pivot table should not be tied to a specific data.
