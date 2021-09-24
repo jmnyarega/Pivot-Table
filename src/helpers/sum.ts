@@ -10,7 +10,7 @@ import {
 
 // helpers
 import { columns, getColumns } from "./columns";
-import { getRows } from "./rows";
+import { getRows, rowLevels } from "./rows";
 
 export const extraRows = "Grand Total";
 
@@ -71,7 +71,9 @@ export const getColumnPerChildRD = (
   rowDimensions: RowDimensions,
   metric: Metric
 ) => {
-  const { label, values } = getRows(data, rowDimensions, extraRows)[1];
+  const { label, values } = getRows(data, rowDimensions, extraRows)[
+    rowDimensions.length - 1
+  ];
   return values.map((s: string) => ({
     [s]: data
       .filter((d) => d[label] === s)
@@ -101,7 +103,9 @@ export const getCellSum = (
   columnDimension: ColumnDimension,
   metric: Metric
 ) => {
-  const { label, values } = getRows(data, rowDimensions, extraRows)[1];
+  const { label, values } = getRows(data, rowDimensions, extraRows)[
+    rowDimensions.length - 1
+  ];
   const { values: cols } = columns(columnDimension, data);
   return values.map((row) =>
     cols.map((col: string) => ({
@@ -178,6 +182,7 @@ export const getTotalSumOfCellValues = (
  *      ]
  *
  */
+
 export const formatRowData = (
   data: Data,
   rowDimensions: RowDimensions,
@@ -185,10 +190,11 @@ export const formatRowData = (
   cellValues: CellValue[]
 ): IRow[] => {
   // child level rows
-  const rows = getRows(data, rowDimensions, extraRows)[1].values;
+  const rows = getRows(data, rowDimensions, extraRows)[rowDimensions.length - 1]
+    .values;
+
   return rows.map((l, index) => ({
-    level1: data.find((d) => d[rowDimensions[1]] === l)[rowDimensions[0]],
-    level2: l,
+    ...rowLevels(data, rowDimensions, l),
     cellValues: cellValues[index].concat(subTotal[index]),
   }));
 };
@@ -238,13 +244,20 @@ export const insertTotals = (
 
   return rows.map((level, i) => {
     const totals = childLevelTotals[i].concat(rowTotal[i]);
-    return rowData
-      .filter((d) => d.level1 === level)
-      .concat([{ level1: level, total: totals }])
-      .map((d) => {
-        d.level1 === extraRows && (d.total = [...totalColumn, gTotal]);
-        return d;
-      });
+    return rowDimensions.length > 1
+      ? rowData
+          .filter((d) => d.level1 === level)
+          .concat([{ level1: level, total: totals }])
+          .map((d) => {
+            d.level1 === extraRows && (d.total = [...totalColumn, gTotal]);
+            return d;
+          })
+      : rowData
+          .filter((d) => d.level1 === level)
+          .map((d) => {
+            d.level1 === extraRows && (d.cellValues = [...totalColumn, gTotal]);
+            return d;
+          });
   });
 };
 
@@ -253,7 +266,9 @@ export const cellValues = (
   rowDimensions: RowDimensions,
   columnDimension: ColumnDimension,
   metric: Metric
-) => ({
-  rows: insertTotals(data, rowDimensions, columnDimension, metric),
-  columns: getColumns([], columnDimension, data, extraRows),
-});
+) => {
+  return {
+    rows: insertTotals(data, rowDimensions, columnDimension, metric),
+    columns: getColumns([], columnDimension, data, extraRows),
+  };
+};

@@ -1,7 +1,7 @@
 import { ColumnDimension, Data, Metric, RowDimensions } from "../types";
 import { cellValues } from "./sum";
 
-export const getRowData = (
+export const getData = (
   data: Data,
   rowDimensions: RowDimensions,
   columnDimension: ColumnDimension,

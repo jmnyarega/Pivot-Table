@@ -1,11 +1,11 @@
 import { FC } from "react";
 
 // components
-import LeftTable from "./LeftTable";
-import RightTable from "./RightTable";
+import LeftTable from "./LeftTable/index.tsx";
+import RightTable from "./RightTable/index.tsx";
 
 // helpers
-import { getRowData } from "../helpers/pivotTable";
+import { getData } from "../helpers/pivotTable";
 
 // types
 import { IPivotTableProps } from "../types";
@@ -21,7 +21,7 @@ const PivotTable: FC<IPivotTableProps> = ({
   styles,
   title,
 }) => {
-  const { columns, rows } = getRowData(
+  const { columns, rows } = getData(
     dataset,
     rowDimensions,
     columnDimension,
@@ -32,6 +32,7 @@ const PivotTable: FC<IPivotTableProps> = ({
       <div className="table__wrap">
         <LeftTable rowDimensions={rowDimensions} rows={rows} title={title} />
         <RightTable
+          rowDimensions={rowDimensions}
           columnDimension={columnDimension}
           rows={rows}
           columns={columns}

@@ -4,11 +4,28 @@ export const getRows = (
   data: Data,
   rowDimensions: RowDimensions,
   extraRows: string
+) =>
+  rowDimensions.map((value: string, i: number) => ({
+    label: value,
+    values:
+      i === 0
+        ? Array.from(new Set(data.map((d) => d[value]))).concat(extraRows)
+        : Array.from(new Set(data.map((d) => d[value]))),
+  }));
+
+export const rowLevels = (
+  data: Data,
+  rowDimensions: RowDimensions,
+  level: string
 ) => {
-  const level1 = Array.from(new Set(data.map((d) => d[rowDimensions[0]])));
-  const level2 = Array.from(new Set(data.map((d) => d[rowDimensions[1]])));
-  return [
-    { label: rowDimensions[0], values: level1.concat(extraRows) },
-    { label: rowDimensions[1], values: level2 },
-  ];
+  let res: any = {};
+  for (let index = 0; index < rowDimensions.length; index++) {
+    res[`level${index + 1}`] =
+      index === 0 && rowDimensions.length - 1 > index
+        ? data.find((d) => d[rowDimensions[index + 1]] === level)[
+            rowDimensions[0]
+          ]
+        : level;
+  }
+  return res;
 };

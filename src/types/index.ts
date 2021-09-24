@@ -24,6 +24,7 @@ export interface ILeftTableProps {
 
 export interface IRightTableProps {
   columnDimension: ColumnDimension;
+  rowDimensions: RowDimensions;
   rows: Array<any>;
   columns: Columns;
 }
