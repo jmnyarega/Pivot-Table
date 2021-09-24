@@ -20,9 +20,8 @@ describe("#getColumns", () => {
       data.rowDimensions,
       data.columnDimension,
       data.data,
-      data.extraColumns
+      data.extraColumn
     );
-
     const expected = [
       "category",
       "subCategory",

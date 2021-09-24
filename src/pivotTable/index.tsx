@@ -25,7 +25,8 @@ const PivotTable: FC<IPivotTableProps> = ({
     dataset,
     rowDimensions,
     columnDimension,
-    metric
+    metric,
+    "Grand Total"
   );
   return (
     <div className="table__container" style={styles}>

@@ -12,8 +12,8 @@ describe("#getRows", () => {
   });
 
   it("should return all rows", () => {
-    const rows = getRows(data.data, data.rowDimensions, data.extraColumns);
-    const expected = ["Furniture", "Office Supplies", "Total"];
+    const rows = getRows(data.data, data.rowDimensions, data.extraColumn);
+    const expected = ["Furniture", "Technology", "Total"];
 
     expect(rows[0].values).toEqual(expected);
     expect(rows[0].label).toEqual("category");

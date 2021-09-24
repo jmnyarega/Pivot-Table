@@ -4,30 +4,30 @@ type DataObject = {
   category?: string;
   subCategory?: string;
   sales?: number;
-  extraColumns?: string;
+  extraColumn?: string;
 };
 
 interface IData {
   rowDimensions: string[];
   columnDimension: string;
-  extraColumns: string;
+  extraColumn: string;
   data: DataObject[];
   metric: string;
 }
 
 export const initialData: IData = {
   rowDimensions: [""],
-  extraColumns: "",
+  extraColumn: "",
   columnDimension: "",
-  metric: "sales",
+  metric: "",
   data: [],
 };
 
 export const initialize = (): any => ({
   columnDimension: "state",
   rowDimensions: ["category", "subCategory"],
-  extraColumns: "Total",
-  metric: "sales",
+  extraColumn: "Total",
+  metric: "quantity",
   data: [
     {
       country: "United States",
@@ -35,14 +35,16 @@ export const initialize = (): any => ({
       category: "Furniture",
       subCategory: "Furnishings",
       sales: 47000.04,
+      quantity: 5,
     },
     {
       country: "United States",
       city: "Wilmington",
       state: "Delaware",
-      category: "Office Supplies",
-      subCategory: "Binders",
+      category: "Technology",
+      subCategory: "Phones",
       sales: 30.84,
+      quantity: 5,
     },
   ],
 });
@@ -50,7 +52,7 @@ export const initialize = (): any => ({
 export const clear = (): IData => ({
   columnDimension: "",
   rowDimensions: [""],
-  extraColumns: "",
+  extraColumn: "",
   metric: "",
   data: [],
 });

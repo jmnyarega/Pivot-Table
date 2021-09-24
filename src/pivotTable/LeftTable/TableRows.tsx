@@ -8,11 +8,12 @@ interface ILeftTableRow {
   rowDimensions: RowDimensions;
 }
 
-const tableCell = (
+const generateTableCells = (
   rows: Data[],
   rowDimensions: RowDimensions,
   rowCount: number,
-  row: IRow
+  row: IRow,
+  childRows: IRow[]
 ) =>
   rowDimensions.length > 1 ? (
     <>
@@ -21,7 +22,7 @@ const tableCell = (
         colSpan={!row.level2 ? 2 : 0}
       >
         {!row.level2 && rows.length > 1 ? row.level1 : ""}
-        {rowCount === rows.length - 1 ? `${row.level1}` : ""}
+        {rowCount === childRows.length - 1 ? `${row.level1}` : ""}{" "}
       </td>
       <td className="table__cell -level-cell"> {row.level2} </td>
     </>
@@ -29,21 +30,21 @@ const tableCell = (
     <td className="table__cell -level-cell">{row.level1}</td>
   );
 
-const tableRow = (rows: Data[], rowDimensions: RowDimensions) =>
+const generateTableRows = (rows: Data[], rowDimensions: RowDimensions) =>
   rows.map((childRows: IRow[]) => {
     let rowCount = childRows.length;
     return childRows.map((row: IRow, index: number) => {
       rowCount--;
       return (
         <tr key={`${row.level1}${index}`}>
-          {tableCell(rows, rowDimensions, rowCount, row)}
+          {generateTableCells(rows, rowDimensions, rowCount, row, childRows)}
         </tr>
       );
     });
   });
 
 const TableRows: FC<ILeftTableRow> = ({ rowData, rowDimensions }) => (
-  <tbody>{tableRow(rowData, rowDimensions)}</tbody>
+  <tbody>{generateTableRows(rowData, rowDimensions)}</tbody>
 );
 
 export default TableRows;
