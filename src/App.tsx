@@ -31,7 +31,7 @@ const App = () => {
     <PivotTable
       rowDimensions={["category", "subCategory"]}
       columnDimension="state"
-      metric="sales"
+      metric="quantity"
       dataset={data}
       styles={styles}
       title="products"

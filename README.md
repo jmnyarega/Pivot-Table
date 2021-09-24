@@ -76,11 +76,11 @@
 ```
 
 #### Assumptions
-   - The component only supports two rowDimensions at the moment
+   - The component only supports two row dimensions at the moment
    - One aggregator is supported - SUM
    - Typescript does most* of the testing hence few tests writted
    - The component won't recieve a large dataset i.e 1GB
-   - We won't have may rowDimensions - more than two
+   - We won't have may row dimensions - more than two
 
 #### Next steps
    - Support more than 2 row dimensions
@@ -91,3 +91,10 @@
    - Support other methods of data presentation i.e barcharts etc
    - Support multiple data formats
    - Support drag & drop feature
+   - Error handling
+   - Add styles to match the mockups
+
+#### Screenshots
+   - How the output should look like
+   - ![2 row dimensions](./src/Assets/1.png)
+   - ![1 row dimension](./src/Assets/2.png)
