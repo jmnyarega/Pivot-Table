@@ -22,9 +22,10 @@ export const rowLevels = (
   for (let index = 0; index < rowDimensions.length; index++) {
     res[`level${index + 1}`] =
       index === 0 && rowDimensions.length - 1 > index
-        ? data.find((d) => d[rowDimensions[index + 1]] === level)[
-            rowDimensions[0]
-          ]
+        ? data.find(
+            (d) =>
+              rowDimensions[index + 1] && d[rowDimensions[index + 1]] === level
+          )[rowDimensions[0]]
         : level;
   }
   return res;

@@ -1,8 +1,8 @@
 import { FC } from "react";
 
 // components
-import LeftTable from "./LeftTable/index.tsx";
-import RightTable from "./RightTable/index.tsx";
+import LeftTable from "./LeftTable";
+import RightTable from "./RightTable";
 
 // helpers
 import { getData } from "../helpers/pivotTable";

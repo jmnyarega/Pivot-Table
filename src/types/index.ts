@@ -35,6 +35,6 @@ export type RowData = IRow[];
 export interface IRow {
   level1?: any | string;
   level2?: any | string;
-  cellValues?: CellValue[];
+  cellValues?: CellValue[] | any;
   total?: CellValue;
 }
